@@ -1,4 +1,4 @@
-const PURE_ANNOTATION = '#__PURE__'
+const PURE_ANNOTATION = '#__PRIYANKA__'
 
 const isPureAnnotated = node => {
   const { leadingComments } = node
@@ -7,7 +7,7 @@ const isPureAnnotated = node => {
     return false
   }
 
-  return leadingComments.some(comment => /[@#]__PURE__/.test(comment.value))
+  return leadingComments.some(comment => /[@#]__PRIYANKA__/.test(comment.value))
 }
 
 const annotateAsPure = path => {
@@ -87,7 +87,7 @@ const callableExpressionVisitor = path => {
   }
 
   if (path.node.callee.name === 'createSelector') {
-//     annotateAsPure(path);
+    annotateAsPure(path);
   }
 
   
