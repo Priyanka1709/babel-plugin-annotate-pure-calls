@@ -86,8 +86,8 @@ const callableExpressionVisitor = path => {
     return
   }
 
-  if (isCallExpression(path) && path.node.callee.name === 'createSelector') {
-    annotateAsPure(path);
+  if (path.node.callee.name === 'createSelector') {
+//     annotateAsPure(path);
   }
 
   
