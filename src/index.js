@@ -1,5 +1,7 @@
 const PURE_ANNOTATION = '#__PRIYANKA__'
 
+const namesApplicableForPureAnnotation = ['createSelector','createIfEqualSameRefSelector']
+
 const isPureAnnotated = node => {
   const { leadingComments } = node
 
@@ -86,11 +88,11 @@ const callableExpressionVisitor = path => {
     return
   }
 
-  if (path.node.callee.name === 'createSelector') {
-    annotateAsPure(path);
+  if (!namesApplicableForPureAnnotation.includes(path.node.callee.name)) {
+    return;
   }
-
   
+  annotateAsPure(path);
 }
 
 export default () => ({
