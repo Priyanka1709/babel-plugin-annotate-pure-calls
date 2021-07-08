@@ -73,7 +73,7 @@ const isInAssignmentContext = path => {
   return false
 }
 
-const callableExpressionVisitor = path => {
+const callableExpressionVisitor = (options, path) => {
   if (isUsedAsCallee(path) || isInCallee(path)) {
     return
   }
@@ -86,12 +86,16 @@ const callableExpressionVisitor = path => {
     return
   }
 
-  annotateAsPure(path)
+  if (!options.annotateCalls.includes(path.node.callee.name)) {
+    return;
+  }
+  
+  annotateAsPure(path);
 }
 
-export default () => ({
-  name: 'annotate-pure-calls',
+export default (api, options) => ({
+  name: 'babel-plugin-annotate-pure-calls',
   visitor: {
-    'CallExpression|NewExpression': callableExpressionVisitor,
+    'CallExpression|NewExpression': callableExpressionVisitor.bind(this, options),
   },
 })
