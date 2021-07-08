@@ -1,6 +1,4 @@
-const PURE_ANNOTATION = '#__PRIYANKA__'
-
-const namesApplicableForPureAnnotation = ['createSelector','createIfEqualSameRefSelector']
+const PURE_ANNOTATION = '#__PURE__'
 
 const isPureAnnotated = node => {
   const { leadingComments } = node
@@ -9,7 +7,7 @@ const isPureAnnotated = node => {
     return false
   }
 
-  return leadingComments.some(comment => /[@#]__PRIYANKA__/.test(comment.value))
+  return leadingComments.some(comment => /[@#]__PURE__/.test(comment.value))
 }
 
 const annotateAsPure = path => {
@@ -75,7 +73,7 @@ const isInAssignmentContext = path => {
   return false
 }
 
-const callableExpressionVisitor = path => {
+const callableExpressionVisitor = (options, path) => {
   if (isUsedAsCallee(path) || isInCallee(path)) {
     return
   }
@@ -88,16 +86,16 @@ const callableExpressionVisitor = path => {
     return
   }
 
-  if (!namesApplicableForPureAnnotation.includes(path.node.callee.name)) {
+  if (!options.annotateCalls.includes(path.node.callee.name)) {
     return;
   }
   
   annotateAsPure(path);
 }
 
-export default () => ({
-  name: 'annotate-pure-calls',
+export default (api, options) => ({
+  name: 'babel-plugin-annotate-pure-calls',
   visitor: {
-    'CallExpression|NewExpression': callableExpressionVisitor,
+    'CallExpression|NewExpression': callableExpressionVisitor.bind(this, options),
   },
 })
